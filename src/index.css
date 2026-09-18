@@ -1,0 +1,315 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════
+   STUDIO LIGHT — a warm-paper editorial design system
+   Light theme only. No dark mode.
+   ═══════════════════════════════════════════════════════════ */
+
+@layer base {
+  :root {
+    color-scheme: light;
+
+    --paper: #fbfaf7;
+    --sand: #f3efe7;
+    --card: #ffffff;
+    --ink: #12121a;
+    --ink-2: #3c3c48;
+    --muted: #7c7c8a;
+    --line: #e7e2d8;
+    --line-soft: #efebe2;
+
+    --ember: #ff4d26;
+    --indigo: #3b2bff;
+    --amber: #e39400;
+    --teal: #00908b;
+
+    /* layered paper shadow — soft, warm, never grey-muddy */
+    --lift-1: 0 1px 2px rgba(24, 20, 12, 0.04), 0 2px 6px rgba(24, 20, 12, 0.03);
+    --lift-2: 0 2px 4px rgba(24, 20, 12, 0.04), 0 10px 24px -6px rgba(24, 20, 12, 0.08);
+    --lift-3: 0 4px 10px rgba(24, 20, 12, 0.05), 0 24px 56px -14px rgba(24, 20, 12, 0.14);
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'cv11' 1;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+    letter-spacing: -0.028em;
+    font-variation-settings: 'SOFT' 0, 'WONK' 0;
+  }
+
+  ::selection {
+    background: #ffd9cf;
+    color: #12121a;
+  }
+
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--sand); }
+  ::-webkit-scrollbar-thumb {
+    background: #d6cfc0;
+    border-radius: 999px;
+    border: 3px solid var(--sand);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--ember); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+
+  /* ── Shell / rhythm ───────────────────────────────────── */
+  .shell { @apply max-w-shell mx-auto px-6 md:px-10; }
+
+  .rule { @apply h-px w-full bg-line; }
+
+  /* Banded section: hard top/bottom edges plus a short ember tick at the
+     left margin, marking the cut between blocks. */
+  .band {
+    @apply relative border-y border-line;
+  }
+  .band::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -1px;
+    width: 4px;
+    height: 84px;
+    background: var(--ember);
+  }
+
+  /* ── Section masthead (newspaper-style) ───────────────── */
+  .eyebrow {
+    @apply inline-flex items-center gap-2.5 font-mono text-[10.5px] uppercase tracking-[0.3em] text-muted;
+  }
+
+  .eyebrow-num {
+    @apply text-ember font-semibold;
+  }
+
+  .display-xl {
+    font-size: clamp(3rem, 8.4vw, 7rem);
+    line-height: 0.9;
+    font-weight: 600;
+  }
+
+  .display-lg {
+    font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+    line-height: 1.02;
+    font-weight: 600;
+  }
+
+  .outline-type {
+    color: transparent;
+    -webkit-text-stroke: 1.6px var(--ink);
+    paint-order: stroke fill;
+  }
+
+  /* ── Surfaces ─────────────────────────────────────────── */
+  .surface {
+    @apply relative bg-card border border-line rounded-[20px];
+    box-shadow: var(--lift-1);
+    transition: box-shadow 0.45s cubic-bezier(0.22,1,0.36,1),
+                border-color 0.45s cubic-bezier(0.22,1,0.36,1),
+                transform 0.45s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .surface-hover:hover {
+    box-shadow: var(--lift-3);
+    border-color: #ded7c8;
+    transform: translateY(-3px);
+  }
+
+  .surface-flat {
+    @apply relative bg-card border border-line rounded-[20px];
+  }
+
+  /* pointer-tracked spotlight for tilt cards */
+  .spotlight::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    background: radial-gradient(
+      420px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 77, 38, 0.09),
+      rgba(59, 43, 255, 0.05) 42%,
+      transparent 68%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+  .spotlight:hover::before { opacity: 1; }
+  .spotlight > * { position: relative; z-index: 1; }
+
+  /* ── Chips / tags ─────────────────────────────────────── */
+  .chip {
+    @apply inline-flex items-center gap-1.5 font-mono text-[11px] leading-none
+           px-2.5 py-[7px] rounded-full border border-line bg-sand/70 text-ink2;
+    transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+  }
+  .chip:hover {
+    @apply border-ink/25 bg-card text-ink;
+    transform: translateY(-1px);
+  }
+
+  .chip-live {
+    @apply inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em]
+           px-3 py-1.5 rounded-full border;
+    border-color: rgba(0, 144, 139, 0.28);
+    background: rgba(0, 144, 139, 0.07);
+    color: #00706c;
+  }
+
+  /* ── Buttons ──────────────────────────────────────────── */
+  .btn {
+    @apply relative inline-flex items-center justify-center gap-2.5 font-medium text-[15px]
+           px-6 py-3.5 rounded-full overflow-hidden;
+    transition: all 0.4s cubic-bezier(0.22,1,0.36,1);
+  }
+
+  .btn-solid {
+    @apply btn bg-ink text-paper;
+    box-shadow: 0 2px 6px rgba(18,18,26,0.14), 0 12px 28px -10px rgba(18,18,26,0.4);
+  }
+  .btn-solid:hover {
+    background: var(--ember);
+    box-shadow: 0 2px 6px rgba(255,77,38,0.22), 0 16px 34px -10px rgba(255,77,38,0.5);
+  }
+
+  .btn-ghost {
+    @apply btn border border-ink/18 text-ink bg-card/60;
+  }
+  .btn-ghost:hover {
+    @apply border-ink/45 bg-card;
+    box-shadow: var(--lift-2);
+  }
+
+  /* ── Underline link ───────────────────────────────────── */
+  .link-u {
+    @apply relative inline-block;
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size 0.45s cubic-bezier(0.22,1,0.36,1), color 0.3s ease;
+  }
+  .link-u:hover { background-size: 100% 1px; }
+
+  /* ── Capsule tag ──────────────────────────────────────────
+     Bigger, airier pill than .chip — borrowed from Fonestar's staggered
+     capsule rows, where one filled pill anchors each cluster. */
+  .capsule {
+    @apply inline-flex items-center font-mono text-[10.5px] uppercase tracking-[0.14em]
+           px-4 py-2.5 rounded-full border border-line text-ink2 bg-transparent;
+    transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .capsule:hover {
+    @apply border-ink/45 text-ink bg-card;
+    transform: translateY(-2px);
+    box-shadow: var(--lift-2);
+  }
+  .capsule-lead {
+    @apply bg-ink text-paper border-ink;
+  }
+  .capsule-lead:hover {
+    @apply bg-ember border-ember text-paper;
+  }
+
+  /* ── Character roll-over (see RollText.jsx) ───────────── */
+  .roll-b > span { transform: translateY(105%); }
+  .roll:hover .roll-a > span,
+  .group:hover .roll .roll-a > span { transform: translateY(-105%); }
+  .roll:hover .roll-b > span,
+  .group:hover .roll .roll-b > span { transform: translateY(0); }
+
+  /* ── Segmented proficiency meter ──────────────────────── */
+  .tick {
+    @apply h-[3px] flex-1 rounded-full;
+    background: var(--line);
+    transition: background-color 0.5s cubic-bezier(0.22,1,0.36,1), transform 0.5s cubic-bezier(0.22,1,0.36,1);
+  }
+}
+
+@layer utilities {
+
+  /* ── Reveal on scroll ─────────────────────────────────── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.85s cubic-bezier(0.22,1,0.36,1),
+                transform 0.85s cubic-bezier(0.22,1,0.36,1);
+    will-change: opacity, transform;
+  }
+  .reveal.is-in { opacity: 1; transform: none; }
+
+  /* The wipe lives on an INNER element, never on the observed node itself:
+     clip-path is factored into IntersectionObserver's intersection rect, so a
+     fully-clipped element reports ratio 0 and its own reveal never fires. */
+  .reveal-mask > .mask-inner {
+    display: block;
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 1.05s cubic-bezier(0.22,1,0.36,1);
+    will-change: clip-path;
+  }
+  .reveal-mask.is-in > .mask-inner {
+    clip-path: inset(-18% -4% -18% -4%);
+  }
+
+  /* ── Backgrounds ──────────────────────────────────────── */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgba(18,18,26,0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(18,18,26,0.045) 1px, transparent 1px);
+    background-size: 72px 72px;
+  }
+
+  .bg-dots {
+    background-image: radial-gradient(rgba(18,18,26,0.10) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .mask-fade {
+    -webkit-mask-image: radial-gradient(ellipse 72% 62% at 50% 42%, #000 35%, transparent 100%);
+    mask-image: radial-gradient(ellipse 72% 62% at 50% 42%, #000 35%, transparent 100%);
+  }
+
+  .mask-edges {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .text-ember-grad {
+    background-image: linear-gradient(100deg, #ff4d26, #e39400 46%, #3b2bff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .pause-hover:hover { animation-play-state: paused; }
+
+  /* Parks decorative animation while its section is off screen. */
+  .anim-park, .anim-park * { animation-play-state: paused !important; }
+}
